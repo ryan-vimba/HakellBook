@@ -1,4 +1,5 @@
 module Lists where
+    import Data.Char
 
     myHead :: [a] -> Maybe a
     myHead (x : _) = Just x
@@ -97,6 +98,23 @@ module Lists where
     zipWith1 f (x : xs) (y : ys) = f x y : zipWith1 f xs ys
 
     zip1  = zipWith1 (,)
+
+    capitalize :: String -> String
+    capitalize "" = ""
+    capitalize (x:xs) = toUpper x : xs
+
+    capitalizeAll :: String -> String
+    capitalizeAll "" = ""
+    capitalizeAll (x:xs) = toUpper x : capitalizeAll xs
+
+    capitalizeHead :: String -> Maybe Char
+    capitalizeHead "" = Nothing
+    capitalizeHead (x:xs) = Just $ toUpper x
+
+    capitalizeAllThenHead :: String -> Maybe Char
+    capitalizeAllThenHead s = (capitalizeHead . capitalizeAll) s
+
+    capitalizeAllThenHead' = capitalizeHead . capitalizeAll
 
     myMap :: (a -> b) -> [a] -> [b]
     myMap = map
