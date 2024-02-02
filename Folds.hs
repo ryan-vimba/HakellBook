@@ -34,6 +34,48 @@ module Folds where
 
     -- foldl (flip const) 'z' [1..5]
     example9 = foldl const 'z' [1..5]
-    
-    
 
+    -- foldr const 0 xs
+    -- = foldr const 0 ([1,2,3,4,5] ++ undefined)
+    -- = foldr const 0 [1,2,3,4,5] ++ undefined
+    -- = const 1 (foldr const 0 [2,3,4,5] ++ undefined )
+    -- = const 1 (const 2 (foldr const 0 [3,4,5] ++ undefined))
+    -- = const 1 (const 2 (const 3 (foldr const 0 [4,5] ++ undefined)))
+    -- = const 1 (const 2 (const 3 (const 4(foldr const 0 [5] ++ undefined))))
+    -- = const 1 (const 2 (const 3 (const 4(const 5 (foldr const 0 [] ++ undefined)))))
+    -- = const 1 (const 2 (const 3 (const 4(const 5 (foldr const 0 [] ++ undefined)))))
+
+    -- = 1
+    
+    --- = foldr const 0 
+
+
+    -- example11 = foldr (&&) False ([True, undefined])
+    -- foldr (&&) False ([True, undefined])
+    -- True && (foldr (&&) False ([undefined])
+    -- True && (undefined && (foldr (&&) False []))
+    
+    example12 = foldr (&&) True [False, undefined]
+    example13 = foldr (&&) True ([False] ++ undefined)
+
+    -- xs = [1..5]  
+    -- foldl const 0 xs
+    -- foldl const 0 [1,2,3,4,5] ++ undefined
+    -- foldl const (const 0 1) [2,3,4,5] ++ undefined
+    -- foldl const 0 [2,3,4,5] ++ undefined
+    -- foldl const (const 0 2) [3,4,5] ++ undefined
+    -- foldl const 0 [3,4,5] ++ undefined
+
+    -- ...
+    -- foldl const 0 [] ++ undefined
+
+    example14 = foldl (&&) False [False, True, False, undefined]
+    -- foldl (&&) (False && False) [True, False, undefined]
+    -- foldl (&&) ((False && False) && True) [False, undefined]
+    -- foldl (&&) (((False && False) && True) && False) [undefined]
+    -- foldl (&&) ((((False && False) && True) && False) && undefined) []
+    -- (((False && False) && True) && False) && undefined
+    -- ((False && True) && False) && undefined
+    -- (False && False) && undefined
+    -- False && undefined
+    -- False
