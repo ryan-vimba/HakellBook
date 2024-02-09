@@ -1,4 +1,11 @@
 module Folds where
+    {--
+    
+        Relationship between foldr and foldl:
+        foldl (flip f) z (reverse xs) = foldr f z xs
+    
+    --}
+    
     -- foldr (*) 1 [1..5] -->  (1 * (2 * (3 * (4 * (5 * 1)))))
     -- foldl (*) 1 [1..5] -->  (((((1 * 1) * 2) * 3) * 4) * 5)
 
