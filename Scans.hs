@@ -65,5 +65,30 @@ module Scans where
 
     myFilter2 f = foldr ((++) . (\a -> [a | f a])) []
 
+    squish :: [[a]] -> [a]
+    squish = foldr (++) []
+
+    squishMap :: (a -> [b]) -> [a] -> [b] 
+    squishMap f = foldr ((++) . f) []
+
+    squishAgain :: [[a]] -> [a]
+    squishAgain ll = foldr ((++) . squishMap (:[])) [] ll
+
+    myMaximumBy :: (a -> a -> Ordering) -> [a] -> a 
+    myMaximumBy f list = foldr (getBigger f) (head list) list
+        where getBigger func prev curr = if func prev curr == GT then prev else curr
+
+    compareTemp "coldest" "cold" = LT
+    compareTemp "coldest" "hot" = LT
+    compareTemp "coldest" "hottest" = LT
+    compareTemp "cold" "coldest" = GT
+    compareTemp "cold" "hot" = LT
+    compareTemp "cold" "hottest" = LT
+    -- compareTemp ""
+
+    myMinimumBy :: (a -> a -> Ordering) -> [a] -> a 
+    myMinimumBy f list = foldr (getBigger f) (head list) list
+        where getBigger func prev curr = if func prev curr == LT then prev else curr
+
 
 
