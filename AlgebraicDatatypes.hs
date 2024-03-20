@@ -1,5 +1,8 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE TypeApplications #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE FlexibleInstances #-}
+
 
 module AlgebraicDatatypes where
     data LengthUnit = Meter | Foot
@@ -54,4 +57,36 @@ module AlgebraicDatatypes where
     getManu :: Vehicle -> Manufacturer 
     getManu (Car manu _) = manu
 
+    data Example = MakeExample deriving Show
+    data NewExample a = NewMakeExample Int deriving Show
+
+    class TooMany a where 
+      tooMany :: a -> Bool
+
+    instance TooMany Int where 
+      tooMany n = n > 42
+
+    newtype Goats = Goats' Int deriving Show
+    f = Goats'
+
+    instance TooMany Goats where
+      tooMany (Goats' n) = n > 43
+
+    foo (Goats' i) = i
+
+    --unwrapper :: (a -> b) -> a -> b
+    --unwrapper @Goats' i = Goats' i
+    
+
+    g :: (a -> b) -> a -> b
+    g fab = fab
+
+    h = g Goats' 5 
+
+    instance TooMany (Int, String) where
+      tooMany (i, s) = i > 42
+
+
+
+    
 
