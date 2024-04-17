@@ -9,6 +9,7 @@ module AlgebraicDatatypes where
     
     import Data.Int
     import Distribution.Simple (extensionsToFlags)
+    import Data.Char
     
     data LengthUnit = Meter | Foot
     data Length (a :: LengthUnit) = Length Double deriving Show
@@ -299,24 +300,35 @@ module AlgebraicDatatypes where
     foldTree :: (a -> b -> b) -> b -> BinaryTree a -> b
     foldTree _ b Leaf = b
     foldTree f b (Node left a right) = foldTree f (f a (foldTree f b left)) right
-
+    
     vigenereCipher :: String -> String -> String
-    vigenereCipher "" _ = ""
-    vigenereCipher (x : xs) keyword = undefined
-      where extendedKeyword = matchKeywordLength keyword (length xs + 1)
+    vigenereCipher input keyword = addSpaces input (cipher (zipWithIndex (filterOutSpaces input)) keyword)
+
+    cipher :: [(Char, Int)] -> String -> String
+    cipher [] _ = ""
+    cipher (x : xs) key = shiftFromKey x key : cipher xs key
+
+    zipWithIndex :: String -> [(Char, Int)]
+    zipWithIndex str = zip str [0..]
+
+    shiftFromKey :: (Char, Int) -> String -> Char
+    shiftFromKey (ch, i) key = chr $ mod (charShift 'A' ch (modLookup i key)) 26 + ord 'A'
+
+    modLookup :: Int -> String -> Char
+    modLookup i s = s !! mod i (length s)
+
+    charShift z a b = (ord a - ord z) + (ord b - ord z)
+
     
-    -- getShiftAmount :: String -> Int -> Int
-    -- getShiftAmount keyword index = 
+    filterOutSpaces = filter (/= ' ')
 
-    matchKeywordLength :: String -> Int -> String
-    matchKeywordLength keyword inputLength
-      | length keyword < inputLength = matchKeywordLength (keyword ++ keyword) inputLength
-      | otherwise = take inputLength keyword
+    addSpaces :: String -> String -> String
+    addSpaces "" _ = ""
+    addSpaces _ "" = ""
+    addSpaces (input_x : input_xs) (result_x : result_xs)
+      | input_x == ' ' = ' ' : addSpaces input_xs (result_x : result_xs)
+      | otherwise = result_x : addSpaces input_xs result_xs
 
-
-
-
-    
-
+  
 
 
