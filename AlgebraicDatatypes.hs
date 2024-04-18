@@ -10,7 +10,9 @@ module AlgebraicDatatypes where
     import Data.Int
     import Distribution.Simple (extensionsToFlags)
     import Data.Char
-    
+    import Distribution.Simple.Utils (xargs)
+    import qualified Data.Text as T
+
     data LengthUnit = Meter | Foot
     data Length (a :: LengthUnit) = Length Double deriving Show
 
@@ -328,7 +330,40 @@ module AlgebraicDatatypes where
     addSpaces (input_x : input_xs) (result_x : result_xs)
       | input_x == ' ' = ' ' : addSpaces input_xs (result_x : result_xs)
       | otherwise = result_x : addSpaces input_xs result_xs
+    
+    
 
-  
+    isSubseqOf :: (Eq a) => [a] -> [a] -> Bool
+    isSubseqOf [] _ = True
+    isSubseqOf _ [] = False
+    isSubseqOf k@(kh : ks) (sh : ss) = if kh == sh 
+      then isSubseqOf ks ss 
+      else isSubseqOf k ss
+
+    capitalizeWords :: String -> [(String, String)]
+    capitalizeWords input = map capitalizeWord w
+      where w = words input
+
+    capitalizeWord :: String -> (String, String)
+    capitalizeWord "" = ("", "")
+    capitalizeWord word@(x : xs) = (word, toUpper x : xs)
+
+    capitalizeWord' :: String -> String
+    capitalizeWord' "" = ""
+    capitalizeWord' (x : xs) = toUpper x : xs
+
+    capitalizePara :: String -> String
+    capitalizePara s = 
+      strip (concatMap (capitalizeWord' . sentenceify) sent)
+      where sent = sentences s
+
+
+    sentences :: String -> [String]
+    sentences s = filter (not . null) (map (T.unpack . T.strip) (T.splitOn (T.pack ".") (T.pack s)))
+
+    sentenceify :: String -> String
+    sentenceify s = s ++ ". "
+
+    strip s = T.unpack $ T.strip (T.pack s)
 
 
