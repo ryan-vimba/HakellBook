@@ -421,3 +421,22 @@ module AlgebraicDatatypes where
     cellPhonesDead :: DaPhone -> String -> [(Digit, Presses)]
     cellPhonesDead daphone = concatMap (reverseTaps daphone)
 
+    data Expr = Lit Integer | Add Expr Expr
+
+    eval :: Expr -> Integer
+    eval (Lit i) = i
+    eval (Add a b) = eval a + eval b
+
+    printExpr :: Expr -> String
+    printExpr (Lit i) = show i
+    printExpr (Add a b) = printExpr a ++ " + " ++ printExpr b
+
+    printExpr2 :: Expr -> String
+    printExpr2 = show
+
+    instance Show Expr where
+      show (Lit i) = show i
+      show (Add a b) = show a ++ " + " ++ show b 
+      
+
+      
